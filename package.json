@@ -12,6 +12,7 @@
     "vite": "^5.4.8"
   },
   "dependencies": {
+    "diamnet-sdk": "^1.0.2",
     "dompurify": "^3.1.7",
     "marked": "^14.1.3"
   }
