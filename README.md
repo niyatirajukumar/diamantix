@@ -19,3 +19,10 @@ npm install
 npm run dev
 ```
 4. Open the browser and navigate to `http://localhost:5137`
+   
+
+## TODO for Blockchain Part
+- Storing all the events data entered by the organiser on the blockchain.
+- Gnerating NFT for the tickets. and tie them to the event and the user when the user registers for the event.
+- Transfering the NFT to the user's wallet when the user enters the event. (QR code scanning)
+- Functions to retrive the data from the blockchain, like the people participated in the event, the organisers of the event and the data submitted by the organiser while creating the event.
