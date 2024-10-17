@@ -56,7 +56,7 @@ button a:any-link {
 }
 
 
-/* Base styling */
+/* page styles */
 * {
   margin: 0;
   padding: 0;
@@ -77,7 +77,7 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Full width for header */
+
 header {
   display: flex;
   justify-content: space-between;
@@ -85,7 +85,7 @@ header {
   padding: 1rem;
   background-color: #212121;
   color: white;
-  width: 100vw; /* Full width */
+  width: 100vw; 
 }
 
 header svg.logo {
@@ -132,7 +132,7 @@ button a {
   flex-grow: 1;
 }
 
-/* Main content */
+/* main content */
 main {
   flex-grow: 1;
   overflow-y: auto;
@@ -148,7 +148,7 @@ main {
   gap: 1.5rem;
 }
 
-/* Event card styling */
+/* event card styling */
 .event-card {
   background: #f9f9f9;
   padding: 1.5rem;
@@ -202,7 +202,7 @@ main {
   color: #757575;
 }
 
-/* Responsive design */
+
 @media (max-width: 768px) {
   ._wrapper {
     flex-direction: column;
