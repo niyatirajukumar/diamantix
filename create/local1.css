@@ -28,7 +28,7 @@
   margin-bottom: 0.25rem;
 }
 
-/* General styling for the page */
+/* page style */
 * {
   margin: 0;
   padding: 0;
@@ -45,6 +45,7 @@ html, body {
   align-items: center;
 }
 
+/* app stylr */
 #app {
   width: 100%;
   max-width: 600px;
@@ -69,7 +70,7 @@ header span {
   font-size: 1.5rem;
 }
 
-/* Form styling */
+/* form styling */
 .form-wrapper {
   background-color: #fff;
   padding: 2rem;
@@ -126,6 +127,7 @@ textarea {
   min-height: 100px;
 }
 
+/* added dropdown */
 select {
   padding: 0.75rem;
   font-size: 1rem;
@@ -145,7 +147,7 @@ select option {
   padding: 0.5rem;
 }
 
-
+/* button style */
 button {
   padding: 0.75rem 1.5rem;
   background-color: #007bff;
@@ -161,7 +163,7 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* Adjust for smaller screens */
+
 @media (max-width: 768px) {
   #app {
     padding: 1rem;
