@@ -94,6 +94,13 @@ main {
   transform: translate(-50%, -50%);
 }
 
+#public-key {
+  text-overflow: ellipsis;
+  text-align: center;
+  overflow-x: hidden;
+  max-width: 384px;
+}
+
 ::backdrop {
   background-color: rgb(0, 0, 0, 0.24);
 }
