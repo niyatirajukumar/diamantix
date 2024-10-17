@@ -1,2 +1,2 @@
 import "../style.css";
-import "./local.css";
+import "./local1.css";
