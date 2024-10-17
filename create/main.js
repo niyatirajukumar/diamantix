@@ -1,2 +1,3 @@
-import "../style.css";
-import "./local1.css";
+import "../globals.css";
+import "../forms.css";
+import "./local.css";

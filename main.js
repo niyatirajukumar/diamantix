@@ -1,1 +1,2 @@
-import './style.css';
+import './globals.css';
+import './my_events.css';

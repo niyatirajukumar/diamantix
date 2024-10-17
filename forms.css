@@ -1,0 +1,68 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+}
+
+.input-group label {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  color: #212121;
+}
+
+input[type="text"],
+input[type="date"],
+textarea {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.2s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+input[type="file"]::file-selector-button {
+  padding: 0.75rem;
+  margin-right: 0.5rem;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* added dropdown */
+select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.2s ease-in-out;
+  appearance: none; /* Removes default arrow in some browsers */
+  background-color: #fff;
+}
+
+select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+select option {
+  padding: 0.5rem;
+}

@@ -1,0 +1,24 @@
+main {
+  display: flex;
+  justify-content: center;
+}
+
+.form-wrapper button {
+  width: fit-content;
+}
+
+.form-wrapper {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  margin-top: 8rem;
+  width: 100vh;
+}
+
+@media (max-width: 768px) {
+  .form-wrapper {
+    padding: 1.5rem;
+  }
+}
