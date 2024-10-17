@@ -107,3 +107,7 @@ a:any-link {
   border-radius: 50px;
   font-size: 0.8rem;
 }
+
+.hidden {
+  display: none !important;
+}

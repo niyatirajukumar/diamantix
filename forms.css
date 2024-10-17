@@ -17,6 +17,7 @@
 }
 
 input[type="text"],
+input[type="email"],
 input[type="date"],
 textarea {
   padding: 0.75rem;

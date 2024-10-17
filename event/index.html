@@ -37,7 +37,7 @@
         </div>
       </section>
       <section class="event-actions">
-        <button class="register button">Register</button>
+        <button class="register button" id="register-btn">Register</button>
         <!-- takes then to the ticket download page, to be hydrated via js -->
         <a href="#/ticket/UNIQUE_ID"><button class="view-ticket button">View Ticket</button></a>
       </section>
@@ -61,6 +61,25 @@
         </ul>
       </section>
     </main>
+    <aside>
+      <dialog id="register-dialog">
+        <button id="connect-wallet" class="button">Connect Wallet</button>
+        <span id="wallet-id"></span>
+        <div id="additional-details" class="hidden">
+          <form action="#" id="register-from">
+            <div class="input-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <button type="submit" class="button">Register</button>
+        </div>
+        </form>
+      </dialog>
+    </aside>
   </div>
   <script type="module" src="./main.js"></script>
 </body>
