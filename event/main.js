@@ -55,7 +55,7 @@ document.querySelector("#register-btn").addEventListener("click", () => {
 
 document.querySelector("#connect-wallet").addEventListener("click", async () => {
   let publicKey = await connectWallet();
-  if(!publicKey) {
+  if (!publicKey) {
     alert('Failed to connect wallet');
     document.querySelector("#register-dialog").close();
     return;
@@ -83,8 +83,17 @@ document.querySelector("#register-from").addEventListener("submit", (e) => {
   document.querySelector("#register-dialog").close();
 });
 
+document.querySelector("#close-dialog").addEventListener("click", () => {
+  closeDialog();
+});
+
 
 function getEventId() {
   return new URLSearchParams(window.location.search).get("id");
 }
 
+function closeDialog() {
+  document.querySelector("#register-dialog").close();
+  // clear form
+  document.querySelector("#register-from").reset();
+}
