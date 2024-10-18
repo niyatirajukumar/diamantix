@@ -55,6 +55,11 @@ document.querySelector("#register-btn").addEventListener("click", () => {
 
 document.querySelector("#connect-wallet").addEventListener("click", async () => {
   let publicKey = await connectWallet();
+  if(!publicKey) {
+    alert('Failed to connect wallet');
+    document.querySelector("#register-dialog").close();
+    return;
+  }
   // connect wallet
   // process
   // if success show details form and hide connect wallet button
