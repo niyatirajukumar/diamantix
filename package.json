@@ -9,14 +9,17 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "dotenv": "^16.4.5",
     "vite": "^5.4.8",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "diamnet-sdk": "^1.0.2",
     "dompurify": "^3.1.7",
+    "express": "^4.21.1",
     "marked": "^14.1.3"
   }
 }
