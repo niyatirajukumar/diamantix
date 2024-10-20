@@ -1,9 +1,10 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+// import fs from 'node:fs'
+// import path from 'node:path'
+// import { fileURLToPath } from 'node:url'
 import express from 'express'
+import 'dotenv/config'
 import cors from 'cors'
-const {
+import {
   Keypair,
   BASE_FEE,
   TransactionBuilder,
@@ -11,41 +12,41 @@ const {
   Networks,
   Operation,
   Asset,
-} = require("diamnet-sdk");
-import { createServer as createViteServer } from 'vite'
+} from "diamnet-sdk";
+// import { createServer as createViteServer } from 'vite'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+// const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const app = express()
 // vite specific code ---
-const vite = await createViteServer({
-  server: { middlewareMode: true },
-  appType: 'custom'
-});
-app.use(vite.middlewares);
+// const vite = await createViteServer({
+//   server: { middlewareMode: true },
+//   appType: 'custom'
+// });
+// app.use(vite.middlewares);
 
-app.use('*', async (req, res, next) => {
-  const url = req.originalUrl
-  try {
-    let template = fs.readFileSync(
-      path.resolve(__dirname, 'index.html'),
-      'utf-8',
-    );
-    template = await vite.transformIndexHtml(url, template);
-    const { render } = await vite.ssrLoadModule('/src/entry-server.js');
-    const appHtml = await render(url);
-    const html = template.replace(`<!--ssr-outlet-->`, appHtml);
-    res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
-  } catch (e) {
-    vite.ssrFixStacktrace(e);
-    next(e);
-  }
-})
+// app.use('*', async (req, res, next) => {
+//   const url = req.originalUrl
+//   try {
+//     let template = fs.readFileSync(
+//       path.resolve(__dirname, 'index.html'),
+//       'utf-8',
+//     );
+//     template = await vite.transformIndexHtml(url, template);
+//     const { render } = await vite.ssrLoadModule('/src/entry-server.js');
+//     const appHtml = await render(url);
+//     const html = template.replace(`<!--ssr-outlet-->`, appHtml);
+//     res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+//   } catch (e) {
+//     vite.ssrFixStacktrace(e);
+//     next(e);
+//   }
+// })
 // end vite specific code ---
 
 // --- Main Server Code ---
 app.use(express.json());
-app.use(cors);
+// app.use(cors);
 
 
 // Server wallet (main account) is fetched from .env
@@ -279,4 +280,11 @@ app.post("/api/verifyUserPresence", async (req, res) => {
   sendAsset(userAddress, asset);
 });
 
-app.listen(5173);
+// temp
+app.get('/', (req, res) => {
+  res.send('Boo!')
+});
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Express Server listening on http://localhost:${process.env.PORT || 3000}`);
+});
