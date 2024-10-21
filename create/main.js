@@ -2,17 +2,17 @@ import "../globals.css";
 import "../forms.css";
 import "./local.css";
 
-let publicKey = localStorage.getItem("publicKey");
-if (!publicKey) {
-  document.querySelector("#connect-wallet").classList.toggle("hidden", false);
-}
+// let publicKey = localStorage.getItem("publicKey");
+// if (!publicKey) {
+//   document.querySelector("#connect-wallet").classList.toggle("hidden", false);
+// }
 
 document.querySelector("#connect-wallet").addEventListener("click", async () => {
   let publicKey = await connectWallet();
   if (!publicKey) {
     return;
   }
-  document.querySelector("#connect-wallet").classList.toggle("hidden", true);
+  // document.querySelector("#connect-wallet").classList.toggle("hidden", true);
 });
 
 document.querySelector("#create-event").addEventListener("submit", async (e) => {
