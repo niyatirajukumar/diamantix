@@ -23,7 +23,8 @@ async function connectWallet() {
       throw new Error('Failed to connect wallet');
     }
   } else {
-    alert('Wallet extension not found');
+    window.location.href =
+      "https://chromewebstore.google.com/detail/diam-wallet/oakkognifoojdbfjaccegangippipdmn";
     throw new Error('Wallet extension not found');
   }
 }
@@ -70,16 +71,38 @@ document.querySelector("#connect-wallet").addEventListener("click", async () => 
   document.querySelector("#additional-details").classList.toggle("hidden", false);
 });
 
-document.querySelector("#register-from").addEventListener("submit", (e) => {
+document.querySelector("#register-from").addEventListener("submit", async (e) => {
   e.preventDefault();
   let formData = new FormData(e.target);
   let data = {};
   for (let [key, value] of formData.entries()) {
     data[key] = value;
   }
-  console.log(data); // { name, email }
-  // process
-  // if success, close dialog
+  data.publicKey = localStorage.getItem("publicKey");
+  let eventId = getEventId();
+  if (!eventId) {
+    alert("Invalid event");
+    return;
+  }
+  data.eventId = eventId;
+  console.log(data); // { name, email, eventId, publicKey }
+  // send data
+  let res = await fetch("http://localhost:3000/api/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  let json = await res.json();
+  let xdr = json.xdr;
+  if (!success || !xdr) {
+    return alert(json.message);
+  }
+  console.log("XDR:", xdr);
+  console.log("Data:", json.data);
+  signTransaction(xdr);
   document.querySelector("#register-dialog").close();
 });
 
@@ -96,4 +119,21 @@ function closeDialog() {
   document.querySelector("#register-dialog").close();
   // clear form
   document.querySelector("#register-from").reset();
+}
+
+function signTransaction(xdr) {
+  if (window.diam) {
+    window.diam
+      .sign(xdr, true, "Diamante Testnet 2024")
+      .then((result) => {
+        console.log("Transaction signed:", result);
+        alert("Registered successfully");
+      })
+      .catch((error) => {
+        console.error("Error signing transaction:", error);
+        alert("An error occurred. Please try again");
+      });
+  } else {
+    alert("Diam Wallet extension not found");
+  }
 }

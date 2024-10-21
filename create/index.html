@@ -30,24 +30,25 @@
       <h2>Create Event</h2>
     </header>
     <main>
+      <button id="connect-wallet" class="button hidden">Connect Wallet</button>
       <section class="form-wrapper">
         <!-- preventDefault, handle with js -->
         <form action="#" class="form" id="create-event">
           <div class="input-group">
-            <label for="event-name">Event Name</label>
-            <input type="text" id="event-name" name="event-name" required>
+            <label for="name">Event Name</label>
+            <input type="text" id="name" name="name" required>
           </div>
           <div class="input-group">
-            <label for="event-thumbnail">Event Thumbnail</label>
-            <input type="file" accept="image/*" id="event-thumbnail" name="event-thumbnail" required>
+            <label for="thumbnail">Event Thumbnail</label>
+            <input type="file" accept="image/*" id="thumbnail" name="thumbnail" required>
           </div>
           <div class="input-group">
-            <label for="event-date">Event Date</label>
-            <input type="date" id="event-date" name="event-date" required>
+            <label for="date">Event Date</label>
+            <input type="date" id="date" name="date" required>
           </div>
           <div class="input-group">
-            <label for="event-location">Event Location</label>
-            <select id="event-location" name="event-location" required>
+            <label for="location">Event Location</label>
+            <select id="location" name="location" required>
               <option value="">Select a Location</option>
               <option value="Bangalore">Bangalore</option>
               <option value="Hyderabad">option-2</option>
@@ -59,12 +60,8 @@
           </div>
 
           <div class="input-group">
-            <label for="event-description">Event Description</label>
-            <textarea id="event-description" name="event-description" required></textarea>
-          </div>
-          <div class="input-group">
-            <label for="organiser-details">Organiser Wallet Addresses</label>
-            <textarea id="organiser-details" name="organiser-details" required></textarea>
+            <label for="description">Event Description <span style="color: #7a7a7a">(Markdown Supported)</span></label>
+            <textarea id="description" name="description" required></textarea>
           </div>
           <button type="submit" class="button">Create Event</button>
         </form>

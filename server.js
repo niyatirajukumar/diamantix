@@ -1,7 +1,7 @@
 // import fs from 'node:fs'
 // import path from 'node:path'
 // import { fileURLToPath } from 'node:url'
-import express from 'express'
+import express, { request } from 'express'
 import 'dotenv/config'
 import cors from 'cors'
 import {
@@ -13,6 +13,7 @@ import {
   Operation,
   Asset,
 } from "diamnet-sdk";
+import { JSONFilePreset } from 'lowdb/node';
 // import { createServer as createViteServer } from 'vite'
 
 // const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -46,8 +47,13 @@ const app = express()
 
 // --- Main Server Code ---
 app.use(express.json());
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 // app.use(cors);
-
+const DB = await JSONFilePreset("db.json", { events: [], users: [], organisers: [] });
 
 // Server wallet (main account) is fetched from .env
 const serverWallet = Keypair.fromSecret(process.env.ISSUER_KEY);
@@ -83,13 +89,15 @@ async function createAccount(secretKey) {
   }).catch((error) => {
     console.error("Transaction failed", error.response.data.extras.result_codes);
   });
+  return wallet;
 }
 
-async function fundAccount(publicKey) {
+async function fundAccount(wallet) {
   // use friendBot to fund the account
-  let response = await fetch(`https://friendbot.diamcircle.io?addr=${publicKey}`);
+  let response = await fetch(`https://friendbot.diamcircle.io?addr=${wallet.publicKey()}`);
   let responseJSON = await response.json();
   console.log("response", responseJSON);
+  return wallet;
 }
 
 /**
@@ -100,20 +108,18 @@ async function fundAccount(publicKey) {
  * @returns {Promise<string>} XDR
  */
 let i = 0;
-async function registerUser(eventSlug, userAddress, metadata) {
-  console.log(eventSlug + metadata.type);
+async function registerUser(wallet, userAddress, uniqueIdentifier) {
+  console.log(uniqueIdentifier);
   // create a new ticket asset and attended asset for the user
-  // {i}T => ticket asset, {i}A => attended asset
-  // i is the index of the user
-  // TODO: implement a way to get the index of the user
-  const ticketAsset = new Asset(eventSlug + i + "T", distributorWallet.publicKey());
-  const attendedAsset = new Asset(eventSlug + i + "A", distributorWallet.publicKey());
+  // uniqueIdentifier + 0T => ticket asset, uniqueIdentifier + 0A => attended asset
+  const ticketAsset = new Asset(uniqueIdentifier + "0T", wallet.publicKey());
+  const attendedAsset = new Asset(uniqueIdentifier + "0A", wallet.publicKey());
 
   // load the master account
   const masterAccount = await server.loadAccount(serverWallet.publicKey());
 
   // calculate the total fee for the transaction
-  const numOperations = 6;
+  const numOperations = 4;
   const totalFee = ((BASE_FEE * numOperations) / Math.pow(10, 7))
 
   // create a transaction to register the user
@@ -138,18 +144,18 @@ async function registerUser(eventSlug, userAddress, metadata) {
       })
     )
     // create metadata for the ticket asset
-    .addOperation(
-      Operation.manageData({
-        name: eventSlug + i + "T",
-        source: distributorWallet.publicKey(),
-        value: JSON.stringify(metadata),
-      })
-    )
+    // .addOperation(
+    //   Operation.manageData({
+    //     name: uniqueIdentifier + "0T",
+    //     source: wallet.publicKey(),
+    //     value: uniqueIdentifier + "0T",
+    //   })
+    // )
     // send ticket asset to the user
     .addOperation(
       Operation.payment({
         destination: userAddress,
-        source: distributorWallet.publicKey(),
+        source: wallet.publicKey(),
         asset: ticketAsset,
         amount: "0.0000001",
       })
@@ -162,18 +168,18 @@ async function registerUser(eventSlug, userAddress, metadata) {
       })
     )
     // create metadata for the attended asset
-    .addOperation(
-      Operation.manageData({
-        name: eventSlug + i + "A",
-        source: distributorWallet.publicKey(),
-        value: JSON.stringify(metadata),
-      })
-    )
+    // .addOperation(
+    //   Operation.manageData({
+    //     name: uniqueIdentifier + "0A",
+    //     source: wallet.publicKey(),
+    //     value: uniqueIdentifier + "0A",
+    //   })
+    // )
     .setTimeout(0)
     .build();
 
   // sign
-  tx.sign(serverWallet, distributorWallet);
+  tx.sign(serverWallet, wallet);
 
   // convert to XDR to be sent for signing via wallet extension by the user
   let xdr = tx.toXDR();
@@ -188,7 +194,7 @@ async function registerUser(eventSlug, userAddress, metadata) {
  * @param {number} amount 
  * @returns {Promise<Transaction<Memo<MemoType>>}
  */
-async function sendAsset(userAddress, asset, amount = "0.0000001") {
+async function sendAsset(wallet, userAddress, asset, amount = "0.0000001") {
   // load the server account
   let serverAccount = await server.loadAccount(serverWallet.publicKey());
 
@@ -204,7 +210,7 @@ async function sendAsset(userAddress, asset, amount = "0.0000001") {
     // transfer required amount to the distributor account
     .addOperation(
       Operation.payment({
-        destination: distributorWallet.publicKey(),
+        destination: wallet.publicKey(),
         asset: Asset.native(),
         amount: totalFee.toString(),
         source: serverWallet.publicKey(),
@@ -214,7 +220,7 @@ async function sendAsset(userAddress, asset, amount = "0.0000001") {
     .addOperation(
       Operation.payment({
         destination: userAddress,
-        source: distributorWallet.publicKey(),
+        source: wallet.publicKey(),
         asset,
         amount,
       })
@@ -223,7 +229,7 @@ async function sendAsset(userAddress, asset, amount = "0.0000001") {
     .build();
 
   // sign the transaction and submit it to the network
-  tx.sign(serverWallet, distributorWallet);
+  tx.sign(serverWallet, wallet);
 
   // submit via server account
   server.submitTransaction(tx).then((result) => {
@@ -243,41 +249,146 @@ async function sendAsset(userAddress, asset, amount = "0.0000001") {
 }
 
 app.post("/api/register", async (req, res) => {
-  var { userAddress, eventSlug, metadata } = req.body;
-  console.log("Received data:", { userAddress, eventSlug, metadata });
-  if (!userAddress || !eventSlug || !metadata) {
+  var { name, email, publicKey, eventId } = req.body;
+  console.log("Received data:", { name, email, publicKey, eventId });
+  if (!name || !email || !publicKey || !eventId) {
     return res
       .status(400)
-      .json({ error: "userAddress, eventSlug, and metadata are required" });
+      .json({ message: "name, email, publicKey and eventId are required", success: false });
   }
-  // TODO: check if user provided values are valid before proceeding
+  if (!DB.data.events.find(event => event.slug === eventId)) {
+    return res.status(400).json({ message: "Invalid event", success: false });
+  }
+  if (DB.data.events.find(event => event.publicKey === publicKey)) {
+    return res.status(400).json({ message: "You cannot join your own event", success: false });
+  }
+  if (DB.data.events.find(event => event.users.find(user => user.publicKey === publicKey))) {
+    return res.status(400).json({ message: "User already registered", success: false });
+  }
+
+  let userSlug = generateSlug();
+
+  // create a new user
+  let user = {
+    name,
+    email,
+    publicKey,
+    eventId,
+    slug: userSlug,
+  };
+
+  // save the user to the database
+  let event = DB.data.events.find(event => event.slug === eventId);
+  let privateKey = event.secretKey;
+  let wallet = Keypair.fromSecret(privateKey);
+  event.users.push(user);
+  DB.write();
 
   // generate the XDR for the user to sign
-  const xdr = await registerUser(eventSlug, userAddress, metadata);
+  const xdr = await registerUser(wallet, publicKey, event.slug + userSlug);
 
   // send the XDR to the user
   res.status(200).json({
     message: "Asset creation request received",
     xdr: xdr,
+    data: {
+      userSlug,
+      eventId,
+      uniqueIdentifier: event.slug + userSlug,
+      ticketAsset: event.slug + userSlug + "0T",
+    },
     success: true,
   });
 });
 
 app.post("/api/verifyUserPresence", async (req, res) => {
-  var { userAddress, ticketAsset, eventSlug } = req.body;
-  console.log("Received data:", { userAddress, eventSlug });
-  if (!userAddress || !eventSlug || !ticketAsset) {
+  var { userSLug, publicKey, eventId } = req.body;
+  console.log("Received data:", { userSLug, publicKey, eventId });
+  if (!userSLug || !publicKey || !eventId) {
     return res
       .status(400)
-      .json({ error: "userAddress, eventSlug and ticketAsset are required" });
+      .json({ error: "userSLug, publicKey and eventId are required" });
   }
-  let userIndex = ticketAsset.replace(eventSlug, "").replace("T", "");
+  if (!DB.data.events.find(event => event.slug === eventId)) {
+    return res.status(400).json({ message: "Invalid event", success: false });
+  }
+  if (!DB.data.events.find(event => event.publicKey === publicKey)) {
+    // unauthorized
+    return res.status(401).json({ message: "Unauthorized", success: false });
+  }
+  if (!DB.data.events.find(event => event.users.find(user => user.slug === userSLug))) {
+    return res.status(400).json({ message: "Invalid user", success: false });
+  }
 
-  // TODO: check if requester has the permission to verify user presence
+  let event = DB.data.events.find(event => event.slug === eventId);
+  let wallet = Keypair.fromSecret(event.secretKey);
+
+  // get the user and the ticket asset
+  let user = event.users.find(user => user.slug === userSLug);
+
+  // get the user's public key
+  let userAddress = user.publicKey;
 
   // after checks send the attended asset to the user
-  let asset = new Asset(eventSlug + userIndex + "A", distributorWallet.publicKey());
-  sendAsset(userAddress, asset);
+  let asset = new Asset(eventId + userSLug + "0A", wallet.publicKey());
+  await sendAsset(wallet, userAddress, asset);
+
+  // send the response
+  res.status(200).json({
+    message: "Asset creation request received",
+    success: true,
+  });
+});
+
+app.post("/api/createEvent", async (req, res) => {
+  let { name, description, thumbnail, date, location, publicKey } = req.body;
+  console.log(req.body);
+  console.log("Received data:", { name, description, thumbnail, date, location, publicKey });
+  if (!name || !description || !thumbnail || !date || !location || !publicKey) {
+    return res
+      .status(400)
+      .json({ error: "name, description, thumbnail, date, and location are required" });
+  }
+
+  // create a unique event slug
+  let eventSlug = generateSlug();
+
+  // create a new secret key for the event
+  let secretKey = Keypair.random().secret();
+
+  // create an account for the event
+  let wallet = await createAccount(secretKey);
+
+  // fund the account
+  await fundAccount(wallet);
+
+  // create the event
+  let event = {
+    name,
+    description,
+    thumbnail,
+    date,
+    location,
+    slug: eventSlug,
+    users: [],
+    publicKey,
+    secretKey,
+  };
+
+  // save the event to the database
+  DB.data.events.push(event);
+  DB.write();
+
+  // send the response
+  res.status(200).json({
+    message: "Event creation request received",
+    success: true,
+    data: {
+      eventSlug,
+      publicKey,
+      secretKey,
+    },
+  });
 });
 
 // temp
@@ -288,3 +399,7 @@ app.get('/', (req, res) => {
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Express Server listening on http://localhost:${process.env.PORT || 3000}`);
 });
+
+function generateSlug() {
+  return Math.random().toString(36).substring(2, 7);
+}
