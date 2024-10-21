@@ -232,20 +232,27 @@ async function sendAsset(wallet, userAddress, asset, amount = "0.0000001") {
   tx.sign(serverWallet, wallet);
 
   // submit via server account
-  server.submitTransaction(tx).then((result) => {
-    console.log("Transaction successful");
-    res.status(200).json({
-      message: "Asset creation request received",
-      success: true,
-    });
-  }).catch((error) => {
+  try {
+  let result = await server.submitTransaction(tx);
+  console.log("Transaction successful", result);
+  return {
+    message: "Asset creation request received",
+    success: true,
+    data: {
+      userSlug,
+      eventId,
+      uniqueIdentifier: event.slug + userSlug,
+      ticketAsset: event.slug + userSlug + "0T",
+      attendedAsset: event.slug + userSlug + "0A",
+    }
+  };
+  } catch (error) {
     console.error("Transaction failed", error.response.data.extras.result_codes);
-    res.status(400).json({
+    return {
       message: "Asset creation request failed",
       success: false,
-    });
-  });
-  return tx;
+    };
+  }
 }
 
 app.post("/api/register", async (req, res) => {
@@ -302,9 +309,9 @@ app.post("/api/register", async (req, res) => {
 });
 
 app.post("/api/verifyUserPresence", async (req, res) => {
-  var { userSLug, publicKey, eventId } = req.body;
-  console.log("Received data:", { userSLug, publicKey, eventId });
-  if (!userSLug || !publicKey || !eventId) {
+  var { userSlug, privateKey, eventId } = req.body;
+  console.log("Received data:", { userSlug, publicKey, eventId });
+  if (!userSlug || !privateKey || !eventId) {
     return res
       .status(400)
       .json({ error: "userSLug, publicKey and eventId are required" });
@@ -312,11 +319,11 @@ app.post("/api/verifyUserPresence", async (req, res) => {
   if (!DB.data.events.find(event => event.slug === eventId)) {
     return res.status(400).json({ message: "Invalid event", success: false });
   }
-  if (!DB.data.events.find(event => event.publicKey === publicKey)) {
+  if (!DB.data.events.find(event => event.privateKey === privateKey)) {
     // unauthorized
     return res.status(401).json({ message: "Unauthorized", success: false });
   }
-  if (!DB.data.events.find(event => event.users.find(user => user.slug === userSLug))) {
+  if (!DB.data.events.find(event => event.users.find(user => user.slug === userSlug))) {
     return res.status(400).json({ message: "Invalid user", success: false });
   }
 
@@ -324,20 +331,22 @@ app.post("/api/verifyUserPresence", async (req, res) => {
   let wallet = Keypair.fromSecret(event.secretKey);
 
   // get the user and the ticket asset
-  let user = event.users.find(user => user.slug === userSLug);
+  let user = event.users.find(user => user.slug === userSlug);
 
   // get the user's public key
   let userAddress = user.publicKey;
 
   // after checks send the attended asset to the user
-  let asset = new Asset(eventId + userSLug + "0A", wallet.publicKey());
-  await sendAsset(wallet, userAddress, asset);
+  let asset = new Asset(eventId + userSlug + "0A", wallet.publicKey());
+  let result = await sendAsset(wallet, userAddress, asset);
 
   // send the response
-  res.status(200).json({
-    message: "Asset creation request received",
-    success: true,
-  });
+  if(result.success) {
+    res.status(200).json(result);
+  }
+  else {
+    res.status(400).json(result);
+  }
 });
 
 app.post("/api/createEvent", async (req, res) => {

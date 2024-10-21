@@ -97,7 +97,7 @@ document.querySelector("#register-from").addEventListener("submit", async (e) =>
 
   let json = await res.json();
   let xdr = json.xdr;
-  if (!success || !xdr) {
+  if (!json.success || !xdr) {
     return alert(json.message);
   }
   console.log("XDR:", xdr);

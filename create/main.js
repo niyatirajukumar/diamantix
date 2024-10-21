@@ -42,6 +42,8 @@ document.querySelector("#create-event").addEventListener("submit", async (e) => 
     body: JSON.stringify(data),
   });
   let json = await res.json();
+  let privateKey = json.data.secretKey;
+  localStorage.setItem("privateKey", privateKey);
   let xdr = json.xdr;
   console.log("XDR:", xdr);
   alert("Event created successfully!");
