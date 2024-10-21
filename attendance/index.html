@@ -32,41 +32,12 @@
     <main>
       <section class="form-wrapper">
         <!-- preventDefault, handle with js -->
-        <form action="#" class="form" id="create-event">
+        <form action="#" class="form" id="verify-attendance">
           <div class="input-group">
-            <label for="event-name">Event Name</label>
-            <input type="text" id="event-name" name="event-name" required>
+            <label for="user-slug">User Slug</label>
+            <input type="text" id="user-slug" name="user-slug" required>
           </div>
-          <div class="input-group">
-            <label for="event-thumbnail">Event Thumbnail</label>
-            <input type="file" accept="image/*" id="event-thumbnail" name="event-thumbnail" required>
-          </div>
-          <div class="input-group">
-            <label for="event-date">Event Date</label>
-            <input type="date" id="event-date" name="event-date" required>
-          </div>
-          <div class="input-group">
-            <label for="event-location">Event Location</label>
-            <select id="event-location" name="event-location" required>
-              <option value="">Select a Location</option>
-              <option value="Bangalore">Bangalore</option>
-              <option value="Hyderabad">option-2</option>
-              <option value="Mumbai">option-3</option>
-              <option value="Delhi">option-4</option>
-              <option value="Bihar">option-5</option>
-              <option value="Jharkhand">option-6</option>
-            </select>
-          </div>
-
-          <div class="input-group">
-            <label for="event-description">Event Description</label>
-            <textarea id="event-description" name="event-description" required></textarea>
-          </div>
-          <div class="input-group">
-            <label for="organiser-details">Organiser Wallet Addresses</label>
-            <textarea id="organiser-details" name="organiser-details" required></textarea>
-          </div>
-          <button type="submit" class="button">Create Event</button>
+          <button type="submit" class="button">Verify User Attendance</button>
         </form>
       </section>
     </main>

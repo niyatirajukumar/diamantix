@@ -233,19 +233,12 @@ async function sendAsset(wallet, userAddress, asset, amount = "0.0000001") {
 
   // submit via server account
   try {
-  let result = await server.submitTransaction(tx);
-  console.log("Transaction successful", result);
-  return {
-    message: "Asset creation request received",
-    success: true,
-    data: {
-      userSlug,
-      eventId,
-      uniqueIdentifier: event.slug + userSlug,
-      ticketAsset: event.slug + userSlug + "0T",
-      attendedAsset: event.slug + userSlug + "0A",
-    }
-  };
+    let result = await server.submitTransaction(tx);
+    console.log("Transaction successful", result);
+    return {
+      message: "Asset creation request received",
+      success: true,
+    };
   } catch (error) {
     console.error("Transaction failed", error);
     return {
@@ -341,8 +334,17 @@ app.post("/api/verifyUserPresence", async (req, res) => {
   let result = await sendAsset(wallet, userAddress, asset);
 
   // send the response
-  if(result.success) {
-    res.status(200).json(result);
+  if (result.success) {
+    res.status(200).json({
+      message: "Asset creation request received",
+      success: true,
+      data: {
+        userSlug,
+        eventId,
+        uniqueIdentifier: eventId + userSlug,
+        attendedAsset: eventId + userSlug + "0A",
+      }
+    });
   }
   else {
     res.status(400).json(result);
