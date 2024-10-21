@@ -247,7 +247,7 @@ async function sendAsset(wallet, userAddress, asset, amount = "0.0000001") {
     }
   };
   } catch (error) {
-    console.error("Transaction failed", error.response.data.extras.result_codes);
+    console.error("Transaction failed", error);
     return {
       message: "Asset creation request failed",
       success: false,
@@ -310,16 +310,16 @@ app.post("/api/register", async (req, res) => {
 
 app.post("/api/verifyUserPresence", async (req, res) => {
   var { userSlug, privateKey, eventId } = req.body;
-  console.log("Received data:", { userSlug, publicKey, eventId });
+  console.log("Received data:", { userSlug, privateKey, eventId });
   if (!userSlug || !privateKey || !eventId) {
     return res
       .status(400)
-      .json({ error: "userSLug, publicKey and eventId are required" });
+      .json({ error: "userSlug, privateKey and eventId are required" });
   }
   if (!DB.data.events.find(event => event.slug === eventId)) {
     return res.status(400).json({ message: "Invalid event", success: false });
   }
-  if (!DB.data.events.find(event => event.privateKey === privateKey)) {
+  if (!DB.data.events.find(event => event.secretKey === privateKey)) {
     // unauthorized
     return res.status(401).json({ message: "Unauthorized", success: false });
   }
@@ -369,7 +369,7 @@ app.post("/api/createEvent", async (req, res) => {
   let wallet = await createAccount(secretKey);
 
   // fund the account
-  await fundAccount(wallet);
+  // await fundAccount(wallet);
 
   // create the event
   let event = {
