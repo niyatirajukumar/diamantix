@@ -34,20 +34,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!eventId) {
     // window.location.href = "/";
   }
-  // fetch event details
-  // process
-  // display event details
-  let description = `# REPLACE THIS WITH ACTUAL CONTENT
-  ### This is a subheading
-  normal paragraph
-
-  - list item 1
-  - list item 2
-  - list item 3
-
-  **bold text**
-  `;
-  document.querySelector("#description-content").innerHTML = DOMPurify.sanitize(parse(description));
+  let res = await fetch(`http://localhost:3000/api/event/${eventId}`);
+  let event = await res.json();;
+  populateData(event);
 });
 
 document.querySelector("#register-btn").addEventListener("click", () => {
@@ -136,4 +125,20 @@ function signTransaction(xdr) {
   } else {
     alert("Diam Wallet extension not found");
   }
+}
+
+function populateData(event) {
+  let formattedDate = new Date(event.date).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+  document.querySelector(".event-name").textContent = DOMPurify.sanitize(event.name);
+  document.querySelector(".event-meta").textContent = DOMPurify.sanitize(event.location);
+  document.querySelector(".event-date").textContent = DOMPurify.sanitize(formattedDate);
+  document.querySelector("#description-content").innerHTML = DOMPurify.sanitize(parse(event.description));
+  let imageUrl = event.thumbnail ? `https://ipfs.io/ipfs/${event.thumbnail}` : "/logo.png";
+  document.querySelector(".event-thumbnail").src = imageUrl;
+  document.querySelector(".event-thumbnail").alt = event.name;
+  document.querySelector("#organiser").textContent = event.publicKey;
 }

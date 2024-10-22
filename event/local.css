@@ -66,17 +66,14 @@ main {
   /* background-color: #f5f5f5; */
 }
 
-.organiser-details ul {
+.organiser-details div {
   list-style-type: none;
   margin: 0.5rem 0;
   padding: 1rem;
   background-color: #f5f5f5;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
   font-size: 1rem;
-}
-
-.organiser-details li {
-  padding: 0.5rem 0;
-  color: #212121;
 }
 
 #register-dialog[open] {

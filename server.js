@@ -412,7 +412,7 @@ app.get("/api/events", (req, res) => {
   let data = events.map(event => {
     return {
       name: event.name,
-      description: event.description,
+      // description: event.description,
       thumbnail: event.thumbnail,
       date: event.date,
       location: event.location,
@@ -435,7 +435,7 @@ app.get("/api/myEvents", (req, res) => {
   let data = events.map(event => {
     return {
       name: event.name,
-      description: event.description,
+      // description: event.description,
       thumbnail: event.thumbnail,
       date: event.date,
       location: event.location,
