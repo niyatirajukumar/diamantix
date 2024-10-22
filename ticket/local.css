@@ -1,0 +1,105 @@
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#ticket {
+  position: relative;
+  margin: 2rem auto;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background-color: #083f60;
+  padding: 2rem;
+  border-radius: 12px;
+  color: white;
+}
+
+.icon-group,
+.image-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.image-group {
+  gap: 0.35rem;
+}
+
+.image-group img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.hr {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.icon-group svg {
+  fill: white;
+  width: 18px;
+  height: 18px;
+}
+
+.ticket-qr {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+#ticket h1 {
+  font-size: 1.2rem;
+}
+
+#event-date {
+  color: #f4f4f4;
+}
+
+.ticket-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.button {
+  background-color: #083f60;
+}
+
+.button:hover {
+  background-color: #0a4f70;
+}
+
+/* print media */
+/* remove other elements */
+@media print {
+  #ticket {
+    background-color: transparent;
+    color: black;
+    border: 2px solid black;
+  }
+
+  .icon-group svg {
+    fill: black;
+  }
+
+  #event-date {
+    color: black;
+  }
+
+  .ticket-qr {
+    border: 2px solid black;
+  }
+
+  header,
+  #download-ticket {
+    display: none;
+  }
+}
