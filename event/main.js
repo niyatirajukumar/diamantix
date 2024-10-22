@@ -133,12 +133,13 @@ function populateData(event) {
     month: "short",
     year: "numeric",
   });
-  document.querySelector(".event-name").textContent = DOMPurify.sanitize(event.name);
-  document.querySelector(".event-meta").textContent = DOMPurify.sanitize(event.location);
-  document.querySelector(".event-date").textContent = DOMPurify.sanitize(formattedDate);
+  document.querySelector(".event-name").textContent = event.name;
+  document.querySelector(".event-meta").textContent = event.location;
+  document.querySelector(".event-date").textContent = formattedDate;
   document.querySelector("#description-content").innerHTML = DOMPurify.sanitize(parse(event.description));
   let imageUrl = event.thumbnail ? `https://ipfs.io/ipfs/${event.thumbnail}` : "/logo.png";
   document.querySelector(".event-thumbnail").src = imageUrl;
   document.querySelector(".event-thumbnail").alt = event.name;
+  document.querySelector("#organiser").href = `https://testnetexplorer.diamante.io/about-account/${event.publicKey}`;
   document.querySelector("#organiser").textContent = event.publicKey;
 }

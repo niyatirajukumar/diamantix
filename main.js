@@ -5,6 +5,10 @@ import DOMPurify from "dompurify";
 document.addEventListener('DOMContentLoaded', async () => {
   let res = await fetch("http://localhost:3000/api/events");
   let events = await res.json();
+  if (events.length == 0) {
+    document.querySelector('.my-events').innerHTML = `<div class="no-events"><span>No upcoming events</span></div>`;
+    return;
+  }
   let eventElements = events.map(eventTemplate).join('\n');
   document.querySelector('.my-events').innerHTML = eventElements;
 });

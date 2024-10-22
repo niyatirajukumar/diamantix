@@ -29,10 +29,10 @@ document.querySelector("#create-event").addEventListener("submit", async (e) => 
   }
   data.publicKey = publicKey;
   console.log(data);
-  // let imageHash = await uploadToIPFS(data.thumbnail);
-  // console.log("Image hash:", imageHash);
-  // console.log("Image URL:", `https://ipfs.io/ipfs/${imageHash}`);
-  data.thumbnail = `sdrtfuyguihjkl`;
+  let imageHash = await uploadToIPFS(data.thumbnail);
+  console.log("Image hash:", imageHash);
+  console.log("Image URL:", `https://ipfs.io/ipfs/${imageHash}`);
+  data.thumbnail = imageHash;
   let res = await fetch("http://localhost:3000/api/createEvent", {
     method: "POST",
     // mode: "no-cors",
@@ -44,9 +44,12 @@ document.querySelector("#create-event").addEventListener("submit", async (e) => 
   let json = await res.json();
   let privateKey = json.data.secretKey;
   localStorage.setItem(json.data.eventSlug + "-privateKey", privateKey);
-  let xdr = json.xdr;
-  console.log("XDR:", xdr);
-  alert("Event created successfully!");
+  if(json.success) {
+    alert("Event created successfully!");
+    location.href = `/event/?id=${json.data.eventSlug}`;
+  } else {
+    alert("Failed to create event");
+  }
   e.target.reset();
 });
 
@@ -56,20 +59,16 @@ async function uploadToIPFS(file) {
   let res = await fetch('https://uploadipfs.diamcircle.io/api/v0/add', {
     method: 'POST',
     body: formData,
-    mode: "no-cors",
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      maxContentLength: Infinity,
-      maxBodyLength: Infinity
-    }
   });
   let hash;
   try {
     hash = (await res.json()).Hash;
+    console.log("IPFS hash:", hash);
   } catch (error) {
     console.error("Error parsing response from IPFS:", error);
     throw error;
   }
+  return hash;
 }
 
 async function connectWallet() {
