@@ -274,6 +274,9 @@ app.post("/api/register", async (req, res) => {
     email,
     publicKey,
     eventId,
+    hasAttended: false,
+    ticketAsset: eventId + userSlug + "0T",
+    attendedAsset: eventId + userSlug + "0A",
     slug: userSlug,
   };
 
@@ -335,6 +338,8 @@ app.post("/api/verifyUserPresence", async (req, res) => {
 
   // send the response
   if (result.success) {
+    user.hasAttended = true;
+    DB.write();
     res.status(200).json({
       message: "Asset creation request received",
       success: true,
@@ -400,6 +405,84 @@ app.post("/api/createEvent", async (req, res) => {
       secretKey,
     },
   });
+});
+
+app.get("/api/events", (req, res) => {
+  let events = DB.data.events;
+  let data = events.map(event => {
+    return {
+      name: event.name,
+      description: event.description,
+      thumbnail: event.thumbnail,
+      date: event.date,
+      location: event.location,
+      slug: event.slug,
+      publicKey: event.publicKey,
+    };
+  });
+  res.status(200).json(data);
+});
+
+app.get("/api/myEvents", (req, res) => {
+  let publicKey = req.query.publicKey;
+  if (!publicKey) {
+    return res.status(400).json({ message: "publicKey is required", success: false });
+  }
+  let events = DB.data.events.find(event => event.users.find(user => user.publicKey === publicKey));
+  if (!events) {
+    return res.status(200).json([]);
+  }
+  let data = events.map(event => {
+    return {
+      name: event.name,
+      description: event.description,
+      thumbnail: event.thumbnail,
+      date: event.date,
+      location: event.location,
+      slug: event.slug,
+      publicKey: event.publicKey,
+    };
+  });
+
+  res.status(200).json(data);
+});
+
+app.get("/api/event/:slug", (req, res) => {
+  if (!req.params.slug) {
+    return res.status(400).json({ message: "slug is required", success: false });
+  }
+  let event = DB.data.events.find(event => event.slug === req.params.slug);
+  if (!event) {
+    return res.status(404).json({ message: "Event not found", success: false });
+  }
+  res.status(200).json({
+    name: event.name,
+    description: event.description,
+    thumbnail: event.thumbnail,
+    date: event.date,
+    location: event.location,
+    slug: event.slug,
+    publicKey: event.publicKey,
+  });
+});
+
+app.get("/api/event/:eventSlug/users", (req, res) => {
+  // require privateKey
+  let privateKey = req.query.privateKey;
+  let eventId = req.params.eventSlug;
+  if (!privateKey) {
+    return res.status(401).json({ message: "privateKey is required", success: false });
+  }
+  if (!eventId) {
+    return res.status(400).json({ message: "eventId is required", success: false });
+  }
+  let event = DB.data.events.find(event => event.secretKey === privateKey && event.slug === eventId);
+  if (!event) {
+    return res.status(401).json({ message: "Unauthorized", success: false });
+  }
+
+  let users = event.users;
+  res.status(200).json(users);
 });
 
 // temp

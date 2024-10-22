@@ -21,7 +21,7 @@ async function makeAttenance(userSlug) {
     alert("Invalid event");
     return;
   }
-  if (!localStorage.getItem("privateKey")) {
+  if (!localStorage.getItem(eventId + "-privateKey")) {
     alert("Unauthorized!");
     return;
   }
@@ -31,7 +31,7 @@ async function makeAttenance(userSlug) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ eventId, userSlug, privateKey: localStorage.getItem("privateKey") }),
+    body: JSON.stringify({ eventId, userSlug, privateKey: localStorage.getItem(eventId + "-privateKey") }),
   });
   let json = await res.json();
   if (!json.success) {
