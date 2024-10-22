@@ -1,6 +1,40 @@
 import "../globals.css";
 import "../forms.css";
 import "./local.css";
+import QrScanner from 'qr-scanner';
+
+const qrScanner = new QrScanner(
+  document.querySelector("#view"),
+  result => console.log('decoded qr code:', result),
+  {
+    highlightScanRegion: true,
+    highlightCodeOutline: true,
+  },
+);
+
+; (async () => {
+  if(!(await QrScanner.hasCamera())) {
+    alert("No camera available");
+    return;
+  }
+})
+
+
+if (qrScanner.hasFlash()) {
+  document.querySelector("#flash").addEventListener("click", () => {
+    qrScanner.toggleFlash();
+  });
+}
+
+document.querySelector("#start-stop").addEventListener("click", () => {
+  if (qrScanner.isScanning) {
+    qrScanner.stop();
+    document.querySelector("#start-stop").textContent = "Scan QR";
+  } else {
+    qrScanner.start();
+    document.querySelector("#start-stop").textContent = "Stop";
+  }
+});
 
 
 document.querySelector("#verify-attendance").addEventListener("submit", (e) => {
