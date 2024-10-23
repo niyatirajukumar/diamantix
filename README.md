@@ -2,6 +2,8 @@
 
 A blockchain based proof-of-presence system for events.
 
+Live Site: [diamantix.nmit.club](https://diamantix.nmit.club)
+
 ## Usage Flow
 1. Organiser Creates an event page and with event details, assests like images are uploaded to IPFS.
 2. Users register for the event via the page using their wallet, a ticket (as NFT) is generated and stored on the blockchain, and a qr code is generated which contains the details of the user's registration.
