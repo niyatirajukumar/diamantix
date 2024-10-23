@@ -1,1 +1,1 @@
-export const baseURL = process.env.baseURL || 'http://localhost:3000';
+export const baseURL = import.meta.env.VITE_baseURL || 'http://localhost:3000';
