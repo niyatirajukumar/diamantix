@@ -43,6 +43,10 @@ document.querySelector("#create-event").addEventListener("submit", async (e) => 
     body: JSON.stringify(data),
   });
   let json = await res.json();
+  if(json.success == false) {
+    alert("An error occured");
+    return;
+  }
   let privateKey = json.data.secretKey;
   localStorage.setItem(json.data.eventSlug + "-privateKey", privateKey);
   if(json.success) {
