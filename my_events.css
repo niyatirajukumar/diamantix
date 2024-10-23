@@ -34,6 +34,7 @@ main {
 
 ._time {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   font-size: 0.9rem;
   color: #d1d5db;
@@ -99,10 +100,11 @@ main {
 @media (max-width: 768px) {
   ._wrapper {
     flex-direction: column;
+    align-items: center;
     text-align: center;
   }
 
   .event-thumbnail {
-    margin: 0 0 1rem 0;
+    margin: 0 auto 1rem auto;
   }
 }
