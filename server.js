@@ -465,8 +465,12 @@ app.get("/api/event/:slug", (req, res) => {
     publicKey: event.publicKey,
   };
   if (req.query.publicKey) {
+    // check if the user is the organiser
+    let isOrganiser = event.publicKey === req.query.publicKey;
     let user = event.users.find(user => user.publicKey === req.query.publicKey);
     data.isRegistered = user ? true : false;
+    data.isAttended = user ? user.hasAttended : false;
+    data.isOrganiser = isOrganiser;
     data.user = user;
   }
   res.status(200).json(data);

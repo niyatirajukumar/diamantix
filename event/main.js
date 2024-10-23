@@ -150,4 +150,25 @@ function populateData(event) {
   else {
     document.querySelector("#register-btn").classList.toggle("hidden", false);
   }
+  if (event.isOrganiser) {
+    document.querySelector("#register-btn").classList.toggle("hidden", true);
+    document.querySelector("#view-ticket").classList.toggle("hidden", true);
+    document.querySelector("#manage-participants").classList.toggle("hidden", false);
+    document.querySelector("#manage-participants").href = `/attendance/?id=${event.id}`;
+  }
+  else {
+    document.querySelector("#manage-participants").classList.toggle("hidden", true);
+    document.querySelector("#register-btn").classList.toggle("hidden", false);
+  }
+
+  // has attended 
+  if (event.hasAttended) {
+    document.querySelector("#register-btn").classList.toggle("hidden", true);
+    document.querySelector("#has-attended").classList.toggle("hidden", false);
+    // TODO: diamante explorer url
+    document.querySelector("#has-attended").href = ``;
+  }
+  else {
+    document.querySelector("#has-attended").classList.toggle("hidden", true);
+  }
 }
