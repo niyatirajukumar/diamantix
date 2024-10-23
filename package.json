@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "concurrently \"node server.js\" \"vite\"",
     "build": "vite build",
-    "preview": "vite preview"
+    "start": "concurrently \"node server.js\" \"npm run preview\"",
+    "preview": "vite preview --host --port 41237"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",
