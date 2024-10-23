@@ -40,11 +40,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     alert(event.message);
     window.location.href = "/";
   }
+  window.eventData = event;
   populateData(event);
 });
 
 document.querySelector("#register-btn").addEventListener("click", () => {
   document.querySelector("#register-dialog").showModal();
+});
+
+document.querySelector("#share-event").addEventListener("click", async () => {
+  let res = await share(window.eventData.name, window.location.href);
+  if (res.success == false) {
+    alert(res.message);
+  }
 });
 
 document.querySelector("#connect-wallet").addEventListener("click", async () => {
@@ -179,5 +187,28 @@ function populateData(event) {
     attendedToken.addEventListener("click", () => {
       alert(`visit your diam wallet to view the asset named ${event.user.attendedAsset}`);
     });
+  }
+}
+
+async function share(title, text = "") {
+  console.log(title, text)
+  if (navigator.canShare && navigator.canShare({
+    title: title,
+    url: text
+  })) {
+    try {
+      await navigator.share({
+        title: title,
+        url: text
+      });
+      return { success: true, message: "Shared Successfully!" };
+    }
+    catch (e) {
+      console.error(e);
+      return { success: false, message: "An Error Occured While Sharing!" };
+    }
+  }
+  else {
+    return { success: false, message: "Sharing Not Supported on This Device!" };
   }
 }

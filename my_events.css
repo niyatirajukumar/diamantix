@@ -106,25 +106,3 @@ main {
     margin: 0 0 1rem 0;
   }
 }
-
-.delete-btn {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  z-index: 20;
-}
-
-.delete-btn:hover {
-  background-color: #ff3333;
-}
-
-.delete-btn i {
-  color: red;
-  font-size: 1.5rem;
-  cursor: pointer;
-}

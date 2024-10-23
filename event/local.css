@@ -41,6 +41,7 @@ main {
 
 .event-actions {
   display: flex;
+  overflow-x: auto;
   justify-content: start;
   gap: 1rem;
   padding: 1.5rem;
@@ -63,7 +64,8 @@ main {
   background-color: #b91c1c;
 }
 
-#description-content ul, #description-content ol {
+#description-content ul,
+#description-content ol {
   padding-left: 1.5rem;
   margin-bottom: 1rem;
 }
@@ -141,6 +143,21 @@ main {
   cursor: pointer;
 }
 
+.icon-button {
+  border-radius: 1000px;
+}
+
+.icon-group svg {
+  fill: white;
+  width: 18px;
+  height: 18px;
+}
+
+.icon-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
 
 @media (max-width: 768px) {
   .event-actions {
@@ -155,4 +172,3 @@ main {
     margin: 0 0 1rem 0;
   }
 }
-
