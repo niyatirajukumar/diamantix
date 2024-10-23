@@ -40,11 +40,11 @@
     </header>
     <main>
       <section class="my-events">
-        <a href="/event/?id=event1">
+        <button class="delete-btn" onclick="deleteEvent('event1')">
+          <i class="fas fa-trash"></i>
+        </button>
+        <a href="/event/?id=event1" data-event-id="event1">
           <div class="event-card">
-            <button class="delete-btn" onclick="deleteEvent('event1')">
-              <i class="fas fa-trash"></i>
-            </button>
             <time datetime="2024-11-10" class="_time">10 Nov 2024 &nbsp;&nbsp;<span class="pill">Happening
                 Now</span></time>
             <div class="_wrapper">
@@ -59,7 +59,7 @@
           </div>
         </a>
 
-        <a href="/event/?id=event2">
+        <a href="/event/?id=event2" data-event-id="event2">
           <div class="event-card">
             <button class="delete-btn" onclick="deleteEvent('event2')">
               <i class="fas fa-trash"></i>
