@@ -2,6 +2,7 @@ import "../globals.css";
 import "../forms.css";
 import "./local.css";
 
+import { baseURL } from "../config";
 import DOMPurify from "dompurify";
 import { parse } from "marked";
 import * as DiamSdk from "diamnet-sdk";
@@ -34,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!eventId) {
     window.location.href = "/";
   }
-  let res = await fetch(`http://localhost:3000/api/event/${eventId}?publicKey=${localStorage.getItem("publicKey")}`);
+  let res = await fetch(`${baseURL}/api/event/${eventId}?publicKey=${localStorage.getItem("publicKey")}`);
   let event = await res.json();
   if (event.success == false) {
     alert(event.message);
@@ -88,7 +89,7 @@ document.querySelector("#register-from").addEventListener("submit", async (e) =>
   data.eventId = eventId;
   console.log(data); // { name, email, eventId, publicKey }
   // send data
-  let res = await fetch("http://localhost:3000/api/register", {
+  let res = await fetch("${baseURL}/api/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -162,7 +163,7 @@ function populateData(event) {
   let attendedToken = document.querySelector("#attended-token");
   let deleteEvent = document.querySelector(".delete-event");
   deleteEvent.addEventListener("click", async () => {
-    let res = await fetch(`http://localhost:3000/api/event/${event.slug}/delete?privateKey=${localStorage.getItem(event.slug + "-privateKey")}`);
+    let res = await fetch(`${baseURL}/api/event/${event.slug}/delete?privateKey=${localStorage.getItem(event.slug + "-privateKey")}`);
     let json = await res.json();
     if (json.success) {
       alert("Event deleted successfully");

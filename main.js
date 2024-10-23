@@ -1,9 +1,10 @@
 import './globals.css';
 import './my_events.css';
 import DOMPurify from "dompurify";
+import { baseURL } from './config';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  let res = await fetch("http://localhost:3000/api/events");
+  let res = await fetch(`${baseURL}/api/events`);
   let events = await res.json();
   if (events.length == 0) {
     document.querySelector('.my-events').innerHTML = `<div class="no-events"><span>No upcoming events</span></div>`;

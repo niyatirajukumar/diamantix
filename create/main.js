@@ -1,6 +1,7 @@
 import "../globals.css";
 import "../forms.css";
 import "./local.css";
+import { baseURL } from "../config";
 
 // let publicKey = localStorage.getItem("publicKey");
 // if (!publicKey) {
@@ -33,7 +34,7 @@ document.querySelector("#create-event").addEventListener("submit", async (e) => 
   console.log("Image hash:", imageHash);
   console.log("Image URL:", `https://ipfs.io/ipfs/${imageHash}`);
   data.thumbnail = imageHash;
-  let res = await fetch("http://localhost:3000/api/createEvent", {
+  let res = await fetch(`${baseURL}/api/createEvent`, {
     method: "POST",
     // mode: "no-cors",
     headers: {

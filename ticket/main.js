@@ -1,5 +1,6 @@
 import "../globals.css";
 import "./local.css";
+import { baseURL } from "../config";
 
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -9,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   let ticketDetails = getTikcetDetails(ticketId);
   console.log(ticketDetails);
-  let res = await fetch(`http://localhost:3000/api/event/${ticketDetails.eventId}`);
+  let res = await fetch(`${baseURL}/api/event/${ticketDetails.eventId}`);
   let data = await res.json();
   data.ticketId = ticketId;
   console.log(data);

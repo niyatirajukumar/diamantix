@@ -3,13 +3,14 @@ import "../forms.css";
 import "./local.css";
 import QrScanner from 'qr-scanner';
 import DOMPurify from "dompurify";
+import { baseURL } from "../config";
 
 document.addEventListener("DOMContentLoaded", async () => {
   let eventId = getEventId();
   if (!eventId) {
     window.location.href = "/";
   }
-  let res = await fetch(`http://localhost:3000/api/event/${eventId}/users?privateKey=${localStorage.getItem(eventId + "-privateKey")}`);
+  let res = await fetch(`${baseURL}/api/event/${eventId}/users?privateKey=${localStorage.getItem(eventId + "-privateKey")}`);
   let users = await res.json();
   if (users.success == false) {
     alert("unauthorized!");
@@ -101,7 +102,7 @@ async function makeAttendance(userSlug) {
     return;
   }
 
-  let res = await fetch("http://localhost:3000/api/verifyUserPresence", {
+  let res = await fetch(`${baseURL}/api/verifyUserPresence`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
