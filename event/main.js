@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!eventId) {
     // window.location.href = "/";
   }
-  let res = await fetch(`http://localhost:3000/api/event/${eventId}`);
+  let res = await fetch(`http://localhost:3000/api/event/${eventId}?publicKey=${localStorage.getItem("publicKey")}`);
   let event = await res.json();;
   populateData(event);
 });
@@ -142,4 +142,12 @@ function populateData(event) {
   document.querySelector(".event-thumbnail").alt = event.name;
   document.querySelector("#organiser").href = `https://testnetexplorer.diamante.io/about-account/${event.publicKey}`;
   document.querySelector("#organiser").textContent = event.publicKey;
+  if (event.isRegistered && event.user) {
+    document.querySelector("#view-ticket").classList.toggle("hidden", false);
+    document.querySelector("#view-ticket").href = `/ticket/?id=${event.user.ticketAsset}`;
+    document.querySelector("#register-btn").classList.toggle("hidden", true);
+  }
+  else {
+    document.querySelector("#register-btn").classList.toggle("hidden", false);
+  }
 }

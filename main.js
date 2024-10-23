@@ -36,3 +36,10 @@ function eventTemplate(event) {
           </div>
         </a>`;
 }
+
+function deleteEvent(eventId) {
+  const eventElement = document.querySelector(`[data-event-id="${eventId}"]`);
+  if (eventElement) {
+    eventElement.remove();
+  }
+}

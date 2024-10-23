@@ -455,7 +455,7 @@ app.get("/api/event/:slug", (req, res) => {
   if (!event) {
     return res.status(404).json({ message: "Event not found", success: false });
   }
-  res.status(200).json({
+  let data = {
     name: event.name,
     description: event.description,
     thumbnail: event.thumbnail,
@@ -463,7 +463,13 @@ app.get("/api/event/:slug", (req, res) => {
     location: event.location,
     slug: event.slug,
     publicKey: event.publicKey,
-  });
+  };
+  if (req.query.publicKey) {
+    let user = event.users.find(user => user.publicKey === req.query.publicKey);
+    data.isRegistered = user ? true : false;
+    data.user = user;
+  }
+  res.status(200).json(data);
 });
 
 app.get("/api/event/:eventSlug/users", (req, res) => {
