@@ -1,3 +1,32 @@
+#app {
+  align-items: center;
+}
+main {
+  max-width: 728px;
+}
+
+.controls {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.search-wrapper {
+  padding: 0;
+  width: 100%;
+}
+
+.search-wrapper input {
+  border-radius: 6px;
+  width: 100%;
+}
+
+.search-wrapper input::placeholder {
+  color: #374151;
+}
+
 .icon-button {
   padding: 0.5rem;
   border-radius: 4px;
@@ -16,6 +45,27 @@
   fill: #333;
 }
 
+.user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  padding-left: 1.5rem;
+  background-color: #111827;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  margin: 1rem 0;
+  gap: 0.5rem;
+}
+
+.verified {
+  background-color: #15803d;
+  cursor: initial;
+}
+
+.verified:hover {
+  background-color: #15803d;
+}
 
 video#view {
   width: 100%;

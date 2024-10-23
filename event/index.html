@@ -35,35 +35,29 @@
         <img src="https://placehold.co/512x512/212121/fafafa?text=Thumbnail" alt="Event Thumbnail"
           class="event-thumbnail">
         <div>
-          <h1 class="event-name">Event Name</h1>
-          <p class="event-meta" style="cursor: pointer;">Organiser Details/Organising Location etc</p>
+          <h1 class="event-name"></h1>
+          <p class="event-meta" style="cursor: pointer;"></p>
           <p class="event-date"></p>
         </div>
       </section>
       <section class="event-actions">
         <button class="register button" id="register-btn">Register</button>
-        <!-- takes then to the ticket download page, to be hydrated via js -->
         <a href="#" id="view-ticket" class="hidden"><button class="view-ticket button">View Ticket</button></a>
         <a href="#" id="manage-participants" class="hidden"><button class="manage-participants button">Manage
             Participants</button></a>
         <a href="#" id="attended-token" class="hidden"><button class="attended-token button">View Attendance
-            Token</button>
+            Token</button></a>
+        <button class="button delete-event delete hidden">Delete Event</button>
       </section>
       <!-- markdown based image description -->
       <section class="event-description">
         <h2>About</h2>
-        <p id="description-content">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Delectus ducimus explicabo quisquam repudiandae quod
-          quis tempore possimus commodi cupiditate libero. Maiores mollitia recusandae provident soluta veritatis
-          aspernatur nihil laboriosam, quisquam sint dolores eum voluptas beatae natus fugiat animi, ut delectus optio
-          officiis. Earum esse ut quod illo officia incidunt consequatur.
-        </p>
+        <div id="description-content"></div>
       </section>
       <!-- organiser details, preferably their public wallet address, so that users can verify them on the diamante network -->
       <section class="organiser-details">
         <h2>Organiser</h2>
-        <a id="organiser" 
-        href="https://testnetexplorer.diamante.io/about-account/GDJXZBWX3XWRKPR2Q2DDOR3KK3AWDGIB6U7OV7HR7THE77IGCA6346HA" target="_main" style="color: black;">ARNAV</a>
+        <a id="organiser" href="#" target="_main"></a>
       </section>
     </main>
     <aside>

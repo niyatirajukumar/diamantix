@@ -10,13 +10,14 @@ main {
 }
 
 .form-wrapper {
-  background-color: #fff;
+  /* background-color: ; */
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ccc;
-  margin-top: 8rem;
-  width: 100vh;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  border: 1px solid #111827;
+  margin-top: 6rem;
+  width: 100%;
+  max-width: 720px;
 }
 
 @media (max-width: 768px) {

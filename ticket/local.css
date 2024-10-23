@@ -54,6 +54,10 @@ main {
   margin-top: 2rem;
 }
 
+.ticket-qr img {
+  width: 100%;
+}
+
 #ticket h1 {
   font-size: 1.2rem;
 }
@@ -67,14 +71,6 @@ main {
   flex-direction: column;
   justify-content: center;
   gap: 0.25rem;
-}
-
-.button {
-  background-color: #083f60;
-}
-
-.button:hover {
-  background-color: #0a4f70;
 }
 
 /* print media */

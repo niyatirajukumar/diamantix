@@ -2,6 +2,37 @@ import "../globals.css";
 import "../forms.css";
 import "./local.css";
 import QrScanner from 'qr-scanner';
+import DOMPurify from "dompurify";
+
+document.addEventListener("DOMContentLoaded", async () => {
+  let eventId = getEventId();
+  if (!eventId) {
+    window.location.href = "/";
+  }
+  let res = await fetch(`http://localhost:3000/api/event/${eventId}/users?privateKey=${localStorage.getItem(eventId + "-privateKey")}`);
+  let users = await res.json();
+  if (users.success == false) {
+    alert("unauthorized!");
+    location.href = "/event?id=" + eventId;
+  }
+  console.log(users);
+  let usersEl = document.querySelector("#users");
+  usersEl.innerHTML = users.map(user => userTemplate(user)).join("\n");
+});
+
+document.querySelector("#search").addEventListener("input", (e) => {
+  let term = e.target.value;
+  let users = document.querySelectorAll(".user");
+  users.forEach(user => {
+    let name = user.querySelector("h3").textContent;
+    if (name.toLowerCase().includes(term.toLowerCase())) {
+      user.classList.remove("hidden");
+    } else {
+      user.classList.add("hidden");
+    }
+  });
+});
+
 
 const qrScanner = new QrScanner(
   document.querySelector("#view"),
@@ -13,7 +44,7 @@ const qrScanner = new QrScanner(
 );
 
 ; (async () => {
-  if(!(await QrScanner.hasCamera())) {
+  if (!(await QrScanner.hasCamera())) {
     alert("No camera available");
     return;
   }
@@ -37,11 +68,11 @@ document.querySelector("#start-stop").addEventListener("click", () => {
 });
 
 
-document.querySelector("#verify-attendance").addEventListener("submit", (e) => {
-  e.preventDefault();
-  let userSlug = document.querySelector("#user-slug").value;
-  makeAttenance(userSlug);
-});
+// document.querySelector("#verify-attendance").addEventListener("submit", (e) => {
+//   e.preventDefault();
+//   let userSlug = document.querySelector("#user-slug").value;
+//   makeAttendance(userSlug);
+// });
 
 
 function getEventId() {
@@ -49,7 +80,17 @@ function getEventId() {
   return url.searchParams.get("id");
 }
 
-async function makeAttenance(userSlug) {
+function userTemplate(user) {
+  return `<div class="user" data-slug="${user.slug}">
+          <div class="user-details">
+            <h3>${DOMPurify.sanitize(user.name)}</h3>
+            <p>${DOMPurify.sanitize(user.email)}</p>
+          </div>
+          <button class="button ${user.hasAttended ? 'verified" disabled' : '"'}" onClick="makeAttendance('${user.slug}')" >${user.hasAttended ? "Verified" : "Verify"}</button>
+        </div>`;
+}
+
+async function makeAttendance(userSlug) {
   let eventId = getEventId();
   if (!eventId) {
     alert("Invalid event");
@@ -68,7 +109,7 @@ async function makeAttenance(userSlug) {
     body: JSON.stringify({ eventId, userSlug, privateKey: localStorage.getItem(eventId + "-privateKey") }),
   });
   let json = await res.json();
-  if (!json.success) {
+  if (json.success == false) {
     return alert(json.message);
   }
   console.log(json);
@@ -76,4 +117,4 @@ async function makeAttenance(userSlug) {
   return json;
 }
 
-window.makeAttenance = makeAttenance; // temporary expose to the window object
+window.makeAttendance = makeAttendance; // temporary expose to the window object

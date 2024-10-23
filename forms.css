@@ -13,7 +13,7 @@
 .input-group label {
   font-size: 1rem;
   margin-bottom: 0.25rem;
-  color: #212121;
+  color: #f9fafb;
 }
 
 input[type="text"],
@@ -22,23 +22,30 @@ input[type="date"],
 textarea {
   padding: 0.75rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #1f2937;
+  background-color: #111827;
+  color: #f9fafb;
   border-radius: 4px;
   transition: border-color 0.2s ease-in-out;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
 input[type="text"]:focus,
 input[type="date"]:focus,
 textarea:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #ea580c;
 }
 
 input[type="file"]::file-selector-button {
   padding: 0.75rem;
   margin-right: 0.5rem;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
+  color: #f9fafb;
+  background-color: #111827;
+  border: 1px solid #1f2937;
   border-radius: 4px;
   cursor: pointer;
 }
@@ -52,16 +59,17 @@ textarea {
 select {
   padding: 0.75rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  color: #f9fafb;
+  border: 1px solid #1f2937;
   border-radius: 4px;
   transition: border-color 0.2s ease-in-out;
   appearance: none; /* Removes default arrow in some browsers */
-  background-color: #fff;
+  background-color: #111827;
 }
 
 select:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #ea580c;
 }
 
 select option {

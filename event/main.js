@@ -32,10 +32,14 @@ async function connectWallet() {
 document.addEventListener("DOMContentLoaded", async () => {
   let eventId = getEventId();
   if (!eventId) {
-    // window.location.href = "/";
+    window.location.href = "/";
   }
   let res = await fetch(`http://localhost:3000/api/event/${eventId}?publicKey=${localStorage.getItem("publicKey")}`);
-  let event = await res.json();;
+  let event = await res.json();
+  if (event.success == false) {
+    alert(event.message);
+    window.location.href = "/";
+  }
   populateData(event);
 });
 
@@ -86,9 +90,11 @@ document.querySelector("#register-from").addEventListener("submit", async (e) =>
 
   let json = await res.json();
   let xdr = json.xdr;
-  if (!json.success || !xdr) {
+  if (json.success == false) {
     return alert(json.message);
   }
+  alert(json.message);
+  location.reload();
   console.log("XDR:", xdr);
   console.log("Data:", json.data);
   signTransaction(xdr);
@@ -142,33 +148,36 @@ function populateData(event) {
   document.querySelector(".event-thumbnail").alt = event.name;
   document.querySelector("#organiser").href = `https://testnetexplorer.diamante.io/about-account/${event.publicKey}`;
   document.querySelector("#organiser").textContent = event.publicKey;
+  let viewTicket = document.querySelector("#view-ticket");
+  let registerButton = document.querySelector("#register-btn");
+  let manageParticipants = document.querySelector("#manage-participants");
+  let attendedToken = document.querySelector("#attended-token");
+  let deleteEvent = document.querySelector(".delete-event");
+  deleteEvent.addEventListener("click", async () => {
+    let res = await fetch(`http://localhost:3000/api/event/${event.slug}/delete?privateKey=${localStorage.getItem(event.slug + "-privateKey")}`);
+    let json = await res.json();
+    if (json.success) {
+      alert("Event deleted successfully");
+      window.location.href = "/";
+    }
+  });
   if (event.isRegistered && event.user) {
-    document.querySelector("#view-ticket").classList.toggle("hidden", false);
-    document.querySelector("#view-ticket").href = `/ticket/?id=${event.user.ticketAsset}`;
-    document.querySelector("#register-btn").classList.toggle("hidden", true);
-  }
-  else {
-    document.querySelector("#register-btn").classList.toggle("hidden", false);
+    viewTicket.classList.toggle("hidden", false);
+    viewTicket.href = `/ticket/?id=${event.user.ticketAsset}`;
+    registerButton.classList.toggle("hidden", true);
   }
   if (event.isOrganiser) {
-    document.querySelector("#register-btn").classList.toggle("hidden", true);
-    document.querySelector("#view-ticket").classList.toggle("hidden", true);
-    document.querySelector("#manage-participants").classList.toggle("hidden", false);
-    document.querySelector("#manage-participants").href = `/attendance/?id=${event.id}`;
+    registerButton.classList.toggle("hidden", true);
+    deleteEvent.classList.toggle("hidden", false);
+    viewTicket.classList.toggle("hidden", true);
+    manageParticipants.classList.toggle("hidden", false);
+    manageParticipants.href = `/attendance/?id=${event.slug}`;
   }
-  else {
-    document.querySelector("#manage-participants").classList.toggle("hidden", true);
-    document.querySelector("#register-btn").classList.toggle("hidden", false);
-  }
-
-  // has attended 
   if (event.hasAttended) {
-    document.querySelector("#register-btn").classList.toggle("hidden", true);
-    document.querySelector("#has-attended").classList.toggle("hidden", false);
-    // TODO: diamante explorer url
-    document.querySelector("#has-attended").href = ``;
-  }
-  else {
-    document.querySelector("#has-attended").classList.toggle("hidden", true);
+    registerButton.classList.toggle("hidden", true);
+    attendedToken.classList.toggle("hidden", false);
+    attendedToken.addEventListener("click", () => {
+      alert(`visit your diam wallet to view the asset named ${event.user.attendedAsset}`);
+    });
   }
 }

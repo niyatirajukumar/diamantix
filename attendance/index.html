@@ -30,7 +30,20 @@
       <h2>Create Event</h2>
     </header>
     <main>
+      <section class="search-wrapper">
+        <input type="text" id="search" name="search" placeholder="Search Users">
+      </section>
+      <section id="users">
+        <div class="user">
+          <div class="user-details">
+            <h3>User Name</h3>
+            <p>User Email</p>
+          </div>
+          <button class="button">Verify</button>
+        </div>
+      </section>
       <div class="scanner">
+        <p style="text-align: center; margin: 1rem 0;">OR</p>
         <div class="controls">
           <button class="button" id="start-stop">Scan QR</button>
           <button class="icon-button hidden" title="Toggle Flash" id="flash">
@@ -42,16 +55,6 @@
         </div>
         <video id="view"></video>
       </div>
-      <section class="form-wrapper">
-        <!-- preventDefault, handle with js -->
-        <form action="#" class="form" id="verify-attendance">
-          <div class="input-group">
-            <label for="user-slug">User Slug</label>
-            <input type="text" id="user-slug" name="user-slug" required>
-          </div>
-          <button type="submit" class="button">Verify User Attendance</button>
-        </form>
-      </section>
     </main>
   </div>
   <script type="module" src="./main.js"></script>

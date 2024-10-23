@@ -4,8 +4,8 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color: white;
-  background-color: #f4f4f9;
+  color: #f9fafb;
+  background-color: #030712;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -42,7 +42,7 @@ header {
   align-items: center;
   padding: 1rem;
   gap: 0.5rem;
-  background-color: rgba(225, 66, 18, 0.904);
+  background-color: #ea580c;
   color: white;
   width: 100vw;
 }
@@ -68,13 +68,13 @@ main {
   flex-grow: 1;
   overflow-y: auto;
   padding: 2rem;
-  background-color:#003060;
+  background-color: #030712;
   width: 100vw; /* Full width */
   max-width: 100%; /* No side gaps */
 }
 
 .button {
-  background: #007bff;
+  background: #ea580c;
   color: #ffffff;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -87,8 +87,16 @@ main {
   transition: background-color 300ms;
 }
 
+header .button {
+  background-color: transparent;
+  background-color: #030712;
+}
+header .button:hover {
+  background-color: #111827;
+}
+
 .button:hover {
-  background-color: #0e67c7;
+  background-color: #c2410c;
 }
 
 a:any-link {
@@ -101,7 +109,7 @@ a:any-link {
 }
 
 .pill {
-  background-color: #007bff;
+  background-color: #ea580c;
   color: white;
   padding: 0.25rem 0.5rem;
   border-radius: 50px;

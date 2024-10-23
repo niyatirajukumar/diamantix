@@ -53,7 +53,7 @@ app.use(function (req, res, next) {
   next();
 });
 // app.use(cors);
-const DB = await JSONFilePreset("db.json", { events: [], users: [], organisers: [] });
+const DB = await JSONFilePreset("db.json", { events: [] });
 
 // Server wallet (main account) is fetched from .env
 const serverWallet = Keypair.fromSecret(process.env.ISSUER_KEY);
@@ -262,7 +262,7 @@ app.post("/api/register", async (req, res) => {
   if (DB.data.events.find(event => event.publicKey === publicKey)) {
     return res.status(400).json({ message: "You cannot join your own event", success: false });
   }
-  if (DB.data.events.find(event => event.users.find(user => user.publicKey === publicKey))) {
+  if (DB.data.events.find(event => event.users.find(user => user.publicKey === publicKey && user.eventId === eventId))) {
     return res.status(400).json({ message: "User already registered", success: false });
   }
 
@@ -469,7 +469,7 @@ app.get("/api/event/:slug", (req, res) => {
     let isOrganiser = event.publicKey === req.query.publicKey;
     let user = event.users.find(user => user.publicKey === req.query.publicKey);
     data.isRegistered = user ? true : false;
-    data.isAttended = user ? user.hasAttended : false;
+    data.hasAttended = user ? user.hasAttended : false;
     data.isOrganiser = isOrganiser;
     data.user = user;
   }
@@ -493,6 +493,28 @@ app.get("/api/event/:eventSlug/users", (req, res) => {
 
   let users = event.users;
   res.status(200).json(users);
+});
+
+app.get("/api/event/:eventSlug/delete", (req, res) => {
+  let privateKey = req.query.privateKey;
+  let eventId = req.params.eventSlug;
+  if (!privateKey) {
+    return res.status(401).json({ message: "privateKey is required", success: false });
+  }
+  if (!eventId) {
+    return res.status(400).json({ message: "eventId is required", success: false });
+  }
+  let event = DB.data.events.find(event => event.secretKey === privateKey && event.slug === eventId);
+  if (!event) {
+    return res.status(401).json({ message: "Unauthorized", success: false });
+  }
+
+  DB.data.events = DB.data.events.filter(event => event.slug !== eventId);
+  DB.write();
+  res.status(200).json({
+    success: true,
+    message: "Event deleted",
+  });
 });
 
 // temp
