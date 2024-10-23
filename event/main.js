@@ -89,7 +89,7 @@ document.querySelector("#register-from").addEventListener("submit", async (e) =>
   data.eventId = eventId;
   console.log(data); // { name, email, eventId, publicKey }
   // send data
-  let res = await fetch("${baseURL}/api/register", {
+  let res = await fetch(`${baseURL}/api/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
